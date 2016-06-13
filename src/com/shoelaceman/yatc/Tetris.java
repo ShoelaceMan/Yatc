@@ -161,6 +161,7 @@ public class Tetris extends JFrame
           public void actionPerformed(ActionEvent e)
           {
             hm.addScore(pfPassword.getText(),score);
+            frame.dispose();
           }
         });
 
@@ -226,44 +227,6 @@ public class Tetris extends JFrame
     hm.addScore("Chuck",150);
     hm.addScore("Isaac",170);
     hm.addScore("Amelia",200);
-  }
-
-  public static void setNewHighscore()
-  {
-    EventQueue.invokeLater(new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        HighscoreManager hm = new HighscoreManager();
-        JFrame frame = new JFrame("New High Score");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setOpaque(true);
-        JTextArea textArea = new JTextArea(11, 27);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
-        textArea.setText(hm.getHighscoreString());
-        JScrollPane scroller = new JScrollPane(textArea);
-        JPanel inputpanel = new JPanel();
-        inputpanel.setLayout(new FlowLayout());
-        JTextField input = new JTextField(20);
-        JButton button = new JButton("Enter");
-        DefaultCaret caret = (DefaultCaret) textArea.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        panel.add(scroller);
-        inputpanel.add(input);
-        inputpanel.add(button);
-        panel.add(inputpanel);
-        frame.getContentPane().add(BorderLayout.CENTER, panel);
-        frame.pack();
-        frame.setLocationByPlatform(true);
-        frame.setVisible(true);
-        frame.setResizable(false);
-        input.requestFocus();
-      }
-    });
   }
 
   public static void showHighscores()

@@ -151,6 +151,15 @@ public class Board extends JPanel implements ActionListener
     pieceDropped();
   }
 
+  private void twoLinesDown()
+  {
+    if (!tryMove(curPiece, curX, curY - 2))
+    {
+      oneLineDown();
+      pieceDropped();
+    }
+  }
+
   private void oneLineDown()
   {
     if (!tryMove(curPiece, curX, curY - 1))
@@ -341,6 +350,9 @@ public class Board extends JPanel implements ActionListener
           break;
         case KeyEvent.VK_DOWN:
           dropDown();
+          break;
+        case KeyEvent.VK_SPACE:
+          twoLinesDown();
           break;
         case KeyEvent.VK_Z:
           tryMove(curPiece.rotateLeft(), curX, curY);
