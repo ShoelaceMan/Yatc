@@ -27,6 +27,7 @@ Here is a gif of Yatc in action:
 - Hold function
 - Proper scoring system
 - Original tetris chiptunes
+- Butterfly mode
 
 ##License
 Licensed under The MIT License (MIT) Please see LICENSE
