@@ -88,7 +88,7 @@ public class Tetris extends JFrame
     Panel infoArea = new Panel();
     infoArea.setLayout(new BorderLayout());
     nextShape.setBorder(BorderFactory.createEtchedBorder()); // Border
-    JLabel rules = new JLabel("<html>Z: Rotate Left<br>X: Rotate Right<br>P: Pause<br>↔: Move<br> ↓: Drop</html>");
+    JLabel rules = new JLabel("<html>Z: Rotate Left<br>X: Rotate Right<br>P: Pause<br>↔: Move<br> ↓: Slam<br>␣: Drop</html>");
 
     infoArea.add(rules, BorderLayout.EAST);
     infoArea.add(nextShape, BorderLayout.NORTH);
