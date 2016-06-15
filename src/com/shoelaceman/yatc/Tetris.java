@@ -28,7 +28,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.DocumentFilter;
-import javax.swing.text.DocumentFilter.FilterBypass;
 
 import com.shoelaceman.yatc.highscore.HighscoreManager;
 
@@ -196,7 +195,9 @@ public class Tetris extends JFrame
     }
 
     @Override
-    public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException
+    public void replace(
+        FilterBypass fb, int offset, int length, String text,
+        AttributeSet attrs) throws BadLocationException
     {
       int currentLength = fb.getDocument().getLength();
       int overLimit = (currentLength + text.length()) - limit - length;

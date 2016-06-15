@@ -8,7 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.sound.sampled.AudioInputStream;
@@ -220,7 +221,7 @@ public class Board extends JPanel implements ActionListener
       curPiece.setShape(Tetrominoes.NoShape);
       timer.stop();
       isStarted = false;
-      soundEffects("Resources/death.wav");
+      soundEffects("/Resources/death.wav");
       statusbar.setText("game over");
 
       HighscoreManager hm = new HighscoreManager();
@@ -231,7 +232,8 @@ public class Board extends JPanel implements ActionListener
       }
     }
 
-    URL iconUrl = this.getClass().getResource("/Resources/" + curPiece.getNextShape() + ".png");
+    URL iconUrl = this.getClass().getResource(
+        "/Resources/" + curPiece.getNextShape() + ".png");
     Toolkit tk = this.getToolkit();
     nextShape.setIcon(new ImageIcon(tk.getImage(iconUrl)));
   }
@@ -302,10 +304,10 @@ public class Board extends JPanel implements ActionListener
       curPiece.setShape(Tetrominoes.NoShape);
       if (numFullLines < 4)
       {
-        soundEffects("Resources/lineClear.wav");
+        soundEffects("/Resources/lineClear.wav");
       }else
       {
-        soundEffects("Resources/tetris.wav");
+        soundEffects("/Resources/tetris.wav");
       }
       repaint();
     }
@@ -339,27 +341,40 @@ public class Board extends JPanel implements ActionListener
 
   public void bgMusic()
   {
-    // Note: use .wav files
     new Thread(new Runnable()
     {
       public void run()
       {
-        try
+        try (InputStream in = getClass().getResourceAsStream(
+              "/Resources/bgMusic.wav"))
         {
-          Clip clip = AudioSystem.getClip();
-          AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("Resources/bgMusic.wav"));
-          clip.open(inputStream);
-
-          while (isStarted)
+          InputStream bufferedIn = new BufferedInputStream(in);
+          try (AudioInputStream audioIn = AudioSystem.getAudioInputStream(
+                bufferedIn))
           {
-            clip.loop(-1);
-            clip.start();
-          }
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            long clipTime = 0;
 
-          clip.stop();
+            while (isStarted)
+            {
+              clip.setMicrosecondPosition(clipTime);
+
+              while (!isPaused)
+              {
+                clip.loop(-1);
+                clip.start();
+              }
+
+              clipTime = clip.getMicrosecondPosition();
+              clip.stop();
+            }
+
+            clip.stop();
+          }
         } catch (Exception e)
         {
-          System.out.println("ERROR: Resources/bgMusic.wav not found");
+          e.printStackTrace();
         }
       }
     }).start();
@@ -367,20 +382,23 @@ public class Board extends JPanel implements ActionListener
 
   public void soundEffects(final String filename)
   {
-    // Note: use .wav files
     new Thread(new Runnable()
     {
       public void run()
       {
-        try
+        try (InputStream in = getClass().getResourceAsStream(filename))
         {
-          Clip clip = AudioSystem.getClip();
-          AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(filename));
-          clip.open(inputStream);
-          clip.start();
+          InputStream bufferedIn = new BufferedInputStream(in);
+          try (AudioInputStream audioIn = AudioSystem.getAudioInputStream(
+                bufferedIn))
+          {
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            clip.start();
+          }
         } catch (Exception e)
         {
-          System.out.println("ERROR: " + filename + " not found");
+          e.printStackTrace();
         }
       }
     }).start();
@@ -400,6 +418,12 @@ public class Board extends JPanel implements ActionListener
       if (keycode == 'p' || keycode == 'P')
       {
         pause();
+
+        if (isPaused)
+        {
+          soundEffects("/Resources/pause.wav");
+        }
+
         return;
       }
 
@@ -412,27 +436,27 @@ public class Board extends JPanel implements ActionListener
       {
         case KeyEvent.VK_LEFT:
           tryMove(curPiece, curX - 1, curY);
-          soundEffects("Resources/move.wav");
+          soundEffects("/Resources/move.wav");
           break;
         case KeyEvent.VK_RIGHT:
           tryMove(curPiece, curX + 1, curY);
-          soundEffects("Resources/move.wav");
+          soundEffects("/Resources/move.wav");
           break;
         case KeyEvent.VK_DOWN:
           dropDown();
-          soundEffects("Resources/drop.wav");
+          soundEffects("/Resources/drop.wav");
           break;
         case KeyEvent.VK_SPACE:
           twoLinesDown();
-          soundEffects("Resources/move.wav");
+          soundEffects("/Resources/move.wav");
           break;
         case KeyEvent.VK_Z:
           tryMove(curPiece.rotateLeft(), curX, curY);
-          soundEffects("Resources/rotate.wav");
+          soundEffects("/Resources/rotate.wav");
           break;
         case KeyEvent.VK_X:
           tryMove(curPiece.rotateRight(), curX, curY);
-          soundEffects("Resources/rotate.wav");
+          soundEffects("/Resources/rotate.wav");
           break;
       }
     }
