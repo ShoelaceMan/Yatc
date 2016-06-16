@@ -26,7 +26,6 @@ Here is a gif of Yatc in action:
 
 ##TODO:
 - Hold function
-- Proper scoring system
 - Butterfly mode
 
 ##License
