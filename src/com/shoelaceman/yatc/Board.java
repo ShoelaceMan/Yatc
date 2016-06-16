@@ -360,7 +360,7 @@ public class Board extends JPanel implements ActionListener
             {
               clip.setMicrosecondPosition(clipTime);
 
-              while (!isPaused)
+              while (!isPaused && isStarted)
               {
                 clip.loop(-1);
                 clip.start();
