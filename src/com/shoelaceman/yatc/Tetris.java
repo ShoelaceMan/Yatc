@@ -221,16 +221,16 @@ public class Tetris extends JFrame
   {
     // Generate default High Scores, and names
     HighscoreManager hm = new HighscoreManager();
-    hm.addScore("Zalgo",40);
-    hm.addScore("Rudy",50);
-    hm.addScore("Doc",60);
-    hm.addScore("Klaskro",90);
-    hm.addScore("Ryuko",120);
-    hm.addScore("Divad",130);
-    hm.addScore("Cthulu",140);
-    hm.addScore("Chuck",150);
-    hm.addScore("Isaac",170);
-    hm.addScore("Amelia",200);
+    hm.addScore("Zalgo",3500);
+    hm.addScore("Rudy",4500);
+    hm.addScore("Doc",5500);
+    hm.addScore("Klaskro",5750);
+    hm.addScore("Ryuko",6500);
+    hm.addScore("Divad",7000);
+    hm.addScore("Cthulu",7250);
+    hm.addScore("Chuck",8750);
+    hm.addScore("Isaac",9500);
+    hm.addScore("Amelia",10000);
   }
 
   public static void showHighscores()

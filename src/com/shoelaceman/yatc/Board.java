@@ -35,7 +35,7 @@ public class Board extends JPanel implements ActionListener
   boolean isStarted = false;
   boolean isPaused = false;
   int numLinesRemoved = 0;
-  long score = 0;
+  int score = 0;
   int level = 0;
   int curX = 0;
   int curY = 0;
@@ -85,7 +85,7 @@ public class Board extends JPanel implements ActionListener
       if (numLinesRemoved > hm.getLowHighscoreInt())
       {
         Tetris intf = new Tetris();
-        intf.setNewHighscore(numLinesRemoved);
+        intf.setNewHighscore(score);
       }
     } else
     {
