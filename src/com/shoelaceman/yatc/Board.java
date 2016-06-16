@@ -35,6 +35,8 @@ public class Board extends JPanel implements ActionListener
   boolean isStarted = false;
   boolean isPaused = false;
   int numLinesRemoved = 0;
+  long score = 0;
+  int level = 0;
   int curX = 0;
   int curY = 0;
   JLabel statusbar;
@@ -74,27 +76,32 @@ public class Board extends JPanel implements ActionListener
 
   public void start()
   {
-    if (isPaused)
-    {
-      return;
-    }
-
     if (isStarted)
     {
-      isStarted = false;
-      while (isStarted){} // Empty while statement, to wait until value is set
-      isStarted = true;
-    }else
+      curPiece.setShape(Tetrominoes.NoShape);
+      timer.stop();
+
+      HighscoreManager hm = new HighscoreManager();
+      if (numLinesRemoved > hm.getLowHighscoreInt())
+      {
+        Tetris intf = new Tetris();
+        intf.setNewHighscore(numLinesRemoved);
+      }
+    } else
     {
-      isStarted = true;
+      bgMusic();
     }
 
+    isStarted = true;
+    isPaused = false;
     isFallingFinished = false;
     numLinesRemoved = 0;
+    level = 0;
+    score = 0;
     clearBoard();
-    bgMusic();
 
     newPiece();
+    timer.setDelay(400);
     timer.start();
     }
 
@@ -110,11 +117,17 @@ public class Board extends JPanel implements ActionListener
     {
       timer.stop();
       statusbar.setText("paused");
+      setNextPiece(Tetrominoes.NoShape);
+      soundEffects("/Resources/pause.wav");
     } else
     {
       timer.start();
-      statusbar.setText(String.valueOf(numLinesRemoved));
+      statusbar.setText("Score: " + String.valueOf(score) + " Lines: " +
+          String.valueOf(numLinesRemoved) + " Level: " +
+          String.valueOf(level));
+      setNextPiece(curPiece.getNextShape());
     }
+
     repaint();
   }
 
@@ -232,8 +245,15 @@ public class Board extends JPanel implements ActionListener
       }
     }
 
-    URL iconUrl = this.getClass().getResource(
-        "/Resources/" + curPiece.getNextShape() + ".png");
+    setNextPiece(curPiece.getNextShape());
+  }
+
+  public void setNextPiece(Tetrominoes shape)
+  {
+    URL iconUrl;
+
+    iconUrl = this.getClass().getResource("/Resources/" + shape + ".png");
+
     Toolkit tk = this.getToolkit();
     nextShape.setIcon(new ImageIcon(tk.getImage(iconUrl)));
   }
@@ -281,11 +301,6 @@ public class Board extends JPanel implements ActionListener
       if (lineIsFull)
       {
         ++numFullLines;
-        if (numFullLines <= 300) //Speed up as the player scores
-        {
-          timer.setDelay((400 - numFullLines));
-        }
-
         for (int k = i; k < BoardHeight - 1; ++k)
         {
           for (int j = 0; j < BoardWidth; ++j)
@@ -299,16 +314,37 @@ public class Board extends JPanel implements ActionListener
     if (numFullLines > 0)
     {
       numLinesRemoved += numFullLines;
-      statusbar.setText(String.valueOf(numLinesRemoved));
       isFallingFinished = true;
       curPiece.setShape(Tetrominoes.NoShape);
-      if (numFullLines < 4)
+
+      if (numFullLines == 1)
       {
         soundEffects("/Resources/lineClear.wav");
-      }else
+        score = score + (40 * (level + 1));
+      }else if (numFullLines == 2)
+      {
+        soundEffects("/Resources/lineClear.wav");
+        score = score + (100 * (level + 1));
+      }else if (numFullLines == 3)
+      {
+        soundEffects("/Resources/lineClear.wav");
+        score = score + (300 * (level + 1));
+      }else if (numFullLines >= 4)
       {
         soundEffects("/Resources/tetris.wav");
+        score = score + (1200 * (level + 1));
       }
+
+      level = numLinesRemoved / 10;
+
+      if (timer.getDelay() >= 50) //Speed up as the player scores
+      {
+        timer.setDelay((400 - (level * 12)));
+      }
+
+      statusbar.setText("Score: " + String.valueOf(score) + " Lines: " +
+          String.valueOf(numLinesRemoved) + " Level: " +
+          String.valueOf(level));
       repaint();
     }
   }
@@ -418,12 +454,6 @@ public class Board extends JPanel implements ActionListener
       if (keycode == 'p' || keycode == 'P')
       {
         pause();
-
-        if (isPaused)
-        {
-          soundEffects("/Resources/pause.wav");
-        }
-
         return;
       }
 

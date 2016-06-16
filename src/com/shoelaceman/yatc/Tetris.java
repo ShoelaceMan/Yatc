@@ -30,6 +30,7 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.DocumentFilter;
 
 import com.shoelaceman.yatc.highscore.HighscoreManager;
+import com.shoelaceman.yatc.Shape.Tetrominoes;
 
 public class Tetris extends JFrame
 {
@@ -48,8 +49,10 @@ public class Tetris extends JFrame
 
     // The game itself
     Panel gameArea = new Panel();
-    statusbar = new JLabel(" 0"); // Score
+    statusbar = new JLabel("Score: 0 Lines: 0 Level: 0"); // Score
     Board board = new Board(this);
+    board.setNextPiece(Tetrominoes.NoShape);
+
     gameArea.setLayout(new BorderLayout());
     board.setBorder(BorderFactory.createEtchedBorder()); // Border
 
@@ -66,7 +69,7 @@ public class Tetris extends JFrame
     {
       public void actionPerformed(ActionEvent e)
       {
-        statusbar.setText(" 0");
+        statusbar.setText("Score: 0 Lines: 0 Level: 0");
         board.requestFocus();
         board.start();
       }
