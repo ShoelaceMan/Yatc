@@ -35,6 +35,7 @@ public class Board extends JPanel implements ActionListener
   boolean isStarted = false;
   boolean isPaused = false;
   int numLinesRemoved = 0;
+  int spun = 0;
   int score = 0;
   int level = 0;
   int curX = 0;
@@ -67,6 +68,7 @@ public class Board extends JPanel implements ActionListener
     } else
     {
       oneLineDown();
+      spun = 0;
     }
   }
 
@@ -82,7 +84,7 @@ public class Board extends JPanel implements ActionListener
       timer.stop();
 
       HighscoreManager hm = new HighscoreManager();
-      if (numLinesRemoved > hm.getLowHighscoreInt())
+      if (score > hm.getLowHighscoreInt())
       {
         Tetris intf = new Tetris();
         intf.setNewHighscore(score);
@@ -99,6 +101,7 @@ public class Board extends JPanel implements ActionListener
     level = 0;
     score = 0;
     clearBoard();
+    curPiece.setNewShapeBag(1);
 
     newPiece();
     timer.setDelay(400);
@@ -307,6 +310,13 @@ public class Board extends JPanel implements ActionListener
           {
             board[(k * BoardWidth) + j] = shapeAt(j, k + 1);
           }
+        }
+
+        if (spun == 1)
+        {
+          level++;
+          score = score + 300;
+          spun = 0;
         }
       }
     }

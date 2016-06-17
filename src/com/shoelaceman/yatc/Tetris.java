@@ -145,11 +145,11 @@ public class Tetris extends JFrame
 
         HighscoreManager hm = new HighscoreManager();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(350,255);
+        frame.setSize(355,255);
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(true);
-        JTextArea textArea = new JTextArea(11, 27);
+        JTextArea textArea = new JTextArea(11, 28);
         textArea.setWrapStyleWord(true);
         textArea.setEditable(false);
         textArea.setText(hm.getHighscoreString());
@@ -246,7 +246,7 @@ public class Tetris extends JFrame
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(true);
-        JTextArea textArea = new JTextArea(11, 27);
+        JTextArea textArea = new JTextArea(11, 28);
         textArea.setWrapStyleWord(true);
         textArea.setEditable(false);
         textArea.setText(hm.getHighscoreString());

@@ -1,6 +1,7 @@
 package com.shoelaceman.yatc;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Shape
 {
@@ -11,8 +12,9 @@ public class Shape
 
   Random rand = new Random();
   private Tetrominoes pieceShape;
-  private int k = Math.abs(rand.nextInt()) % 7 + 1;
-  private Tetrominoes nextPieceShape = values[k];
+  private Tetrominoes nextPieceShape;
+  private int inarow;
+  private int[] bag = {1, 2, 3, 4, 4, 5, 5, 6, 6, 7};
   private int coords[][];
   private int[][][] coordsTable;
 
@@ -78,12 +80,53 @@ public class Shape
     return nextPieceShape;
   }
 
+  public void setNewShapeBag(int when)
+  {
+    if (when == 1)
+    {
+      shuffleArray(bag);
+      nextPieceShape = values[bag[1]];
+    } else if (when == 2)
+    {
+      inarow = 0;
+      int[] dupeCheck = {1, 2, 3, 4, 5, 6, 7};
+      shuffleArray(dupeCheck);
+
+      for (int i = 2; i < 7; i++)
+      {
+        bag[i] = dupeCheck[i];
+      }
+    }
+  }
+
+  static void shuffleArray(int[] ar)
+  {
+    Random rnd = ThreadLocalRandom.current();
+    for (int i = ar.length - 1; i > 0; i--)
+    {
+      int index = rnd.nextInt(i + 1);
+      int a = ar[index];
+      ar[index] = ar[i];
+      ar[i] = a;
+    }
+  }
+
   public void setRandomShape()
   {
-    int j = k; // Number of current shape
-    k = Math.abs(rand.nextInt()) % 7 + 1; // Gen. next shape
+    inarow++;
+
+    for (int i = 1; i < 8; i++)
+    {
+      bag[(i - 1)] =  bag[i];
+    }
+
+    if (inarow > 5)
+    {
+      setNewShapeBag(2);
+    }
+
     setShape(nextPieceShape);
-    nextPieceShape = values[k];
+    nextPieceShape = values[bag[1]];
   }
 
   public int minX()
@@ -114,7 +157,15 @@ public class Shape
       return this;
     }
 
-    int f = k;
+    int[] bagCase;
+    int lastInarow = inarow;
+    bagCase = new int[7];
+
+    for (int i = 0; i < 6; i++)
+    {
+      bagCase[i] = bag[i];
+    }
+
     Shape result = new Shape();
     result.pieceShape = pieceShape;
 
@@ -122,11 +173,17 @@ public class Shape
     {
       result.setX(i, y(i));
       result.setY(i, -x(i));
-      result.k = f;
     }
 
-    result.k = f;
-    result.nextPieceShape = values[f];
+    result.setNewShapeBag(1);
+    for (int i = 0; i < 6; i++)
+    {
+      result.bag[i] = bagCase[i];
+    }
+
+    result.nextPieceShape = values[bagCase[1]];
+    result.inarow = lastInarow;
+
     return result;
   }
 
@@ -137,7 +194,15 @@ public class Shape
       return this;
     }
 
-    int f = k;
+    int[] bagCase;
+    int lastInarow = inarow;
+    bagCase = new int[7];
+
+    for (int i = 0; i < 6; i++)
+    {
+      bagCase[i] = bag[i];
+    }
+
     Shape result = new Shape();
     result.pieceShape = pieceShape;
 
@@ -145,11 +210,17 @@ public class Shape
     {
       result.setX(i, -y(i));
       result.setY(i, x(i));
-      result.k = f;
     }
 
-    result.k = f;
-    result.nextPieceShape = values[f];
+    result.setNewShapeBag(1);
+    for (int i = 0; i < 6; i++)
+    {
+      result.bag[i] = bagCase[i];
+    }
+
+    result.nextPieceShape = values[bagCase[1]];
+    result.inarow = lastInarow;
+
     return result;
   }
 }
