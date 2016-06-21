@@ -35,16 +35,24 @@ public class Board extends JPanel implements ActionListener
   boolean isStarted = false;
   boolean isPaused = false;
   int numLinesRemoved = 0;
-  int spun = 0;
   int score = 0;
   int level = 0;
   int curX = 0;
   int curY = 0;
   JLabel statusbar;
   JLabel nextShape;
-  JLabel rules;
+  JLabel scoreR;
   Shape curPiece;
   Tetrominoes[] board;
+
+  // Shape statistics
+  int s = 0;
+  int z = 0;
+  int o = 0;
+  int t = 0;
+  int ml = 0;
+  int l = 0;
+  int i = 0;
 
   public Board(Tetris parent)
   {
@@ -54,6 +62,7 @@ public class Board extends JPanel implements ActionListener
 
     statusbar =  parent.getStatusBar();
     nextShape = parent.getNextShape();
+    scoreR = parent.getscoreR();
     board = new Tetrominoes[BoardWidth * BoardHeight];
     addKeyListener(new TAdapter());
     clearBoard();
@@ -68,7 +77,6 @@ public class Board extends JPanel implements ActionListener
     } else
     {
       oneLineDown();
-      spun = 0;
     }
   }
 
@@ -84,15 +92,17 @@ public class Board extends JPanel implements ActionListener
       timer.stop();
 
       HighscoreManager hm = new HighscoreManager();
+      Tetris intf = new Tetris();
       if (score > hm.getLowHighscoreInt())
       {
-        Tetris intf = new Tetris();
         intf.setNewHighscore(score);
       }
     } else
     {
       bgMusic();
     }
+
+    l = 0; ml = 0; i = 0; o = 0; t = 0; s = 0; z = 0;
 
     isStarted = true;
     isPaused = false;
@@ -106,7 +116,49 @@ public class Board extends JPanel implements ActionListener
     newPiece();
     timer.setDelay(400);
     timer.start();
+    statusbar.setText(" ");
+    updateScoreR();
+    updateStats();
     }
+
+  private void updateScoreR()
+  {
+    scoreR.setText("<html><body>" + score + "&ensp;<br>" + numLinesRemoved +
+        "&ensp;<br>" + level + "&ensp;</body></html>");
+  }
+
+  private void updateStats()
+  {
+    switch (curPiece.getShape())
+    {
+      case LShape:
+        l++;
+        break;
+      case MirroredLShape:
+        ml++;
+        break;
+      case LineShape:
+        i++;
+        break;
+      case SquareShape:
+        o++;
+        break;
+      case ZShape:
+        z++;
+        break;
+      case SShape:
+        s++;
+        break;
+      case TShape:
+        t++;
+        break;
+    }
+
+    String formattedStats = "<html>" + "<b>S: </b>" + s + "<b>&ensp;Z: </b>" +
+      z +"<b>&ensp;O: </b>" + o + "<b>&ensp;T: </b>" + t + "<b>&ensp;⅃: </b>" +
+      ml +"<b>&ensp;L: </b>" + l + "<b>&ensp;I: </b>" + i + "</html>";
+    statusbar.setText(formattedStats);
+  }
 
   private void pause()
   {
@@ -124,10 +176,9 @@ public class Board extends JPanel implements ActionListener
       soundEffects("/Resources/pause.wav");
     } else
     {
+      updateStats();
       timer.start();
-      statusbar.setText("Score: " + String.valueOf(score) + " Lines: " +
-          String.valueOf(numLinesRemoved) + " Level: " +
-          String.valueOf(level));
+      updateScoreR();
       setNextPiece(curPiece.getNextShape());
     }
 
@@ -231,6 +282,7 @@ public class Board extends JPanel implements ActionListener
     curPiece.setRandomShape();
     curX = BoardWidth / 2 + 1;
     curY = BoardHeight - 1 + curPiece.minY();
+    updateStats();
 
     if (!tryMove(curPiece, curX, curY))
     {
@@ -241,10 +293,10 @@ public class Board extends JPanel implements ActionListener
       statusbar.setText("game over");
 
       HighscoreManager hm = new HighscoreManager();
-      if (numLinesRemoved > hm.getLowHighscoreInt())
+      if (score > hm.getLowHighscoreInt())
       {
         Tetris intf = new Tetris();
-        intf.setNewHighscore(numLinesRemoved);
+        intf.setNewHighscore(score);
       }
     }
 
@@ -311,13 +363,6 @@ public class Board extends JPanel implements ActionListener
             board[(k * BoardWidth) + j] = shapeAt(j, k + 1);
           }
         }
-
-        if (spun == 1)
-        {
-          level++;
-          score = score + 300;
-          spun = 0;
-        }
       }
     }
 
@@ -352,9 +397,7 @@ public class Board extends JPanel implements ActionListener
         timer.setDelay((400 - (level * 12)));
       }
 
-      statusbar.setText("Score: " + String.valueOf(score) + " Lines: " +
-          String.valueOf(numLinesRemoved) + " Level: " +
-          String.valueOf(level));
+      updateScoreR();
       repaint();
     }
   }

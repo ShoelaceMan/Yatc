@@ -92,9 +92,9 @@ public class Shape
       int[] dupeCheck = {1, 2, 3, 4, 5, 6, 7};
       shuffleArray(dupeCheck);
 
-      for (int i = 2; i < 7; i++)
+      for (int i = 0; i < 7; i++)
       {
-        bag[i] = dupeCheck[i];
+        bag[i+2] = dupeCheck[i];
       }
     }
   }

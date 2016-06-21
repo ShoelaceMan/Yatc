@@ -37,6 +37,7 @@ public class Tetris extends JFrame
   static final long serialVersionUID = 23L;
 
   JLabel nextShape = new JLabel();
+  JLabel scoreR = new JLabel();
   JLabel statusbar;
 
   public Tetris()
@@ -49,7 +50,7 @@ public class Tetris extends JFrame
 
     // The game itself
     Panel gameArea = new Panel();
-    statusbar = new JLabel("Score: 0 Lines: 0 Level: 0"); // Score
+    statusbar = new JLabel(" "); // Score
     Board board = new Board(this);
     board.setNextPiece(Tetrominoes.NoShape);
 
@@ -64,6 +65,7 @@ public class Tetris extends JFrame
     tools.setLayout(new FlowLayout(FlowLayout.LEFT));
     JButton newGameButton = new JButton("New Game");
     JButton scoresButton = new JButton("High-Scores");
+    JButton settingsButton = new JButton("Settings");
 
     newGameButton.addActionListener(new ActionListener()
     {
@@ -83,16 +85,29 @@ public class Tetris extends JFrame
       }
     });
 
+    settingsButton.addActionListener(new ActionListener()
+    {
+      public void actionPerformed(ActionEvent e)
+      {
+        System.out.println("Not implemented");
+        //TODO: Implement this
+      }
+    });
+
     tools.add(newGameButton);
     tools.add(scoresButton);
+    //tools.add(settingsButton);
 
     // Game info (Rules, next Tetromino, etc.)
     Panel infoArea = new Panel();
     infoArea.setLayout(new BorderLayout());
     nextShape.setBorder(BorderFactory.createEtchedBorder()); // Border
-    JLabel rules = new JLabel("<html>Z: Rotate Left<br>X: Rotate Right<br>P: Pause<br>↔: Move<br> ↓: Slam<br>␣: Drop</html>");
+    JLabel scoreL = new JLabel("<html><body>Score: <br>Lines:" +
+        " <br>Level: </body></html>");
+    scoreR.setText("<html><body>0&ensp;<br>0&ensp;<br>0&ensp;</body></html>");
 
-    infoArea.add(rules, BorderLayout.EAST);
+    infoArea.add(scoreR, BorderLayout.EAST);
+    infoArea.add(scoreL, BorderLayout.WEST);
     infoArea.add(nextShape, BorderLayout.NORTH);
 
     // Window
@@ -267,6 +282,11 @@ public class Tetris extends JFrame
   public JLabel getStatusBar()
   {
     return statusbar;
+  }
+
+  public JLabel getscoreR()
+  {
+    return scoreR;
   }
 
   public JLabel getNextShape()
