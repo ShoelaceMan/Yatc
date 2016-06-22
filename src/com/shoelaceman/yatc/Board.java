@@ -154,9 +154,9 @@ public class Board extends JPanel implements ActionListener
         break;
     }
 
-    String formattedStats = "<html>" + "<b>S: </b>" + s + "<b>&ensp;Z: </b>" +
-      z +"<b>&ensp;O: </b>" + o + "<b>&ensp;T: </b>" + t + "<b>&ensp;⅃: </b>" +
-      ml +"<b>&ensp;L: </b>" + l + "<b>&ensp;I: </b>" + i + "</html>";
+    String formattedStats = "<html>" + "<b>S </b>" + s + "<b>&ensp;Z </b>" +
+      z +"<b>&ensp;O </b>" + o + "<b>&ensp;T </b>" + t + "<b>&ensp;⅃ </b>" +
+      ml +"<b>&ensp;L </b>" + l + "<b>&ensp;I </b>" + i + "</html>";
     statusbar.setText(formattedStats);
   }
 

@@ -57,7 +57,6 @@ public class Tetris extends JFrame
     gameArea.setLayout(new BorderLayout());
     board.setBorder(BorderFactory.createEtchedBorder()); // Border
 
-    gameArea.add(statusbar, BorderLayout.SOUTH);
     gameArea.add(board, BorderLayout.CENTER);
 
     // The toolbar
@@ -117,6 +116,7 @@ public class Tetris extends JFrame
 
     add(tools, BorderLayout.NORTH);
     add(gameArea, BorderLayout.CENTER);
+    add(statusbar, BorderLayout.SOUTH);
     add(infoArea, BorderLayout.EAST);
 
     // Click field to grab focus
